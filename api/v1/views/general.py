@@ -23,7 +23,8 @@ def put_obj(obj):
         abort(400, "Not a JSON")
     for key in data:
         if key not in ("id", "created_at", "updated_at"):
-            setattr(state, key, data[key])
+            if not(type(obj).__name__ == "User" and key in "email"):
+                setattr(state, key, data[key])
     storage.save()
     return (jsonify(state.to_dict()), 200)
 
