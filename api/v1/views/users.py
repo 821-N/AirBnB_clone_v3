@@ -23,11 +23,11 @@ def users():
         try:
             data = request.get_json()
         except:
-            abort(400, "Not a JSON")
+            return "Not a JSON", 400
         if not data or "email" not in data:
-            abort(400, "Missing email")
+            return "Missing email", 400
         if not data or "password" not in data:
-            abort(400, "Missing password")
+            return "Missing password", 400
         new = cls()
         for key in data:
             setattr(new, key, data[key])

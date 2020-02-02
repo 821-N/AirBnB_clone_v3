@@ -10,6 +10,7 @@ def get_obj(obj):
     """ get """
     if obj:
         return (jsonify(obj.to_dict()), 200)
+        return {}
     return abort(404)
 
 
@@ -20,7 +21,7 @@ def put_obj(obj):
     try:
         data = request.get_json()
     except:
-        abort(400, "Not a JSON")
+        return "Not a JSON", 400
     for key in data:
         if key not in ("id", "created_at", "updated_at"):
             if not(type(obj).__name__ == "User" and key in "email"):
@@ -60,9 +61,9 @@ def do(cls, id=None):
         try:
             data = request.get_json()
         except:
-            abort(400, "Not a JSON")
+            return "Not a JSON", 400
         if not data or "name" not in data:
-            abort(400, "Missing name")
+            return "Missing name", 400
         new = cls()
         for key in data:
             setattr(new, key, data[key])
