@@ -24,7 +24,7 @@ def close(bruh):
 @app.errorhandler(404)
 def heck(e):
     """ 404 """
-    return (e or {"error": "Not found"}, 404)
+    return ({"error": "Not found"}, 404)
 
 
 if __name__ == "__main__":
