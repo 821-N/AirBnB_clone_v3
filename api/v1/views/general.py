@@ -15,7 +15,7 @@ def get_obj(obj):
 
 def put_obj(obj):
     """ put """
-    if not state:
+    if not obj:
         abort(404)
     try:
         data = request.get_json()
@@ -24,14 +24,14 @@ def put_obj(obj):
     for key in data:
         if key not in ("id", "created_at", "updated_at"):
             if not(type(obj).__name__ == "User" and key in "email"):
-                setattr(state, key, data[key])
+                setattr(obj, key, data[key])
     storage.save()
-    return (jsonify(state.to_dict()), 200)
+    return (jsonify(obj.to_dict()), 200)
 
 
 def delete_obj(obj):
     """ delete """
-    if not state:
+    if not obj:
         abort(404)
     storage.delete(obj)
     storage.save()
