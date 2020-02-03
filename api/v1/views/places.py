@@ -25,8 +25,6 @@ def cities_id_places(id):
     elif request.method == "POST":
         try:
             data = request.get_json()
-            if "name" not in data:
-                return {"error": "Not found"}, 404
         except:
             return {"error": "Not found"}, 404
         # make sure city id is valid
@@ -37,7 +35,20 @@ def cities_id_places(id):
                 break
         if not found:
             return {"error": "Not found"}, 404
+        # make sure user id is valid
+        if "user_id" not in data:
+            return "Missing user_id", 400
+        found = False
+        user_id = data["user_id"]
+        for user in storage.all("User").values():
+            if user.id == user_id:
+                found = True
+                break
+        if not found:
+            return {"error": "Not found"}, 404
 
+        if "name" not in data:
+            return {"error": "Not found"}, 404
         new = Place()
         for key in data:
             setattr(new, key, data[key])
