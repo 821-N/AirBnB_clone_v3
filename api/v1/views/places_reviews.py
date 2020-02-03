@@ -1,32 +1,32 @@
 #!/usr/bin/python3
 """
-    ~~city~~ place endpoint
+    ~~~~city~~ place~~ review endpoint
 """
 from flask import request, jsonify
 from api.v1.views import app_views
-from models.place import Place
+from models.review import Review
 from api.v1.views.general import do
 from models import storage
 
 
-@app_views.route("/cities/<id>/places", methods=["GET", "POST"])
-def cities_id_places(id):
+@app_views.route("/places/<id>/reviews", methods=["GET", "POST"])
+def places_id_reviews(id):
     """ list or create """
-    place = [c for c in storage.all("City").values() if c.id == id]
-    if not place:
+    review = [c for c in storage.all("Place").values() if c.id == id]
+    if not review:
         return {"error": "Not found"}, 404
 
     if request.method == "GET":
         return (jsonify([
             s.to_dict() for s
-            in storage.all("Place").values()
-            if s.city_id == id
+            in storage.all("Review").values()
+            if s.place_id == id
         ]), 200)
     elif request.method == "POST":
-        # make sure city id is valid
+        # make sure place id is valid
         found = False
-        for city in storage.all("City").values():
-            if city.id == id:
+        for place in storage.all("Place").values():
+            if place.id == id:
                 found = True
                 break
         if not found:
@@ -47,20 +47,20 @@ def cities_id_places(id):
                 break
         if not found:
             return {"error": "Not found"}, 404
-        # check name
-        if "name" not in data:
-            return "Missing name", 400
+        # check text
+        if "text" not in data:
+            return "Missing text", 400
         # create object
-        new = Place()
+        new = Review()
         for key in data:
             setattr(new, key, data[key])
-        setattr(new, "city_id", id)
+        setattr(new, "place_id", id)
         new.save()
         return new.to_dict(), 201
     return {"error": "Not found"}, 404
 
 
-@app_views.route("/places/<id>", methods=["GET", "PUT", "DELETE"])
-def places_id(id):
+@app_views.route("/reviews/<id>", methods=["GET", "PUT", "DELETE"])
+def reviews_id(id):
     """ modift """
-    return do(Place, id, ("user_id", "city_id"))
+    return do(Review, id, ("user_id", "place_id"))
