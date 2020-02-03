@@ -39,4 +39,4 @@ def users():
 @app_views.route("/users/<id>", methods=["GET", "PUT", "DELETE"])
 def users_id(id):
     """ modify """
-    return do(User, id)
+    return do(User, id, ("email",))

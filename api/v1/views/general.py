@@ -6,14 +6,14 @@ from models import storage
 """
 
 
-def get_obj(obj):
+def get_obj(obj, unused=None):
     """ get """
     if obj:
         return jsonify(obj.to_dict()), 200
     return abort(404)
 
 
-def put_obj(obj):
+def put_obj(obj, ignore=()):
     """ put """
     if not obj:
         abort(404)
@@ -22,14 +22,13 @@ def put_obj(obj):
     except:
         return "Not a JSON", 400
     for key in data:
-        if key not in ("id", "created_at", "updated_at"):
-            if not(type(obj).__name__ == "User" and key in "email"):
-                setattr(obj, key, data[key])
+        if key not in ("id", "created_at", "updated_at") + ignore:
+            setattr(obj, key, data[key])
     storage.save()
     return jsonify(obj.to_dict()), 200
 
 
-def delete_obj(obj):
+def delete_obj(obj, unused=None):
     """ delete """
     if not obj:
         abort(404)
@@ -45,12 +44,12 @@ methods = {
 }
 
 
-def do(cls, id=None):
+def do(cls, id=None, ignore=()):
     """ general """
     if id:
         for obj in storage.all(cls).values():
             if obj.id == id and request.method in methods:
-                return methods[request.method](obj)
+                return methods[request.method](obj, ignore)
     elif request.method == "GET":
         return (jsonify([
             s.to_dict() for s
