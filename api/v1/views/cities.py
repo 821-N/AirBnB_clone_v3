@@ -26,9 +26,9 @@ def states_id_cities(id):
         try:
             data = request.get_json()
             if "name" not in data:
-                return {"error": "Not found"}, 404
+                return "Missing name", 400
         except:
-            return {"error": "Not found"}, 404
+            return "Not a JSON", 400
         # make sure state id is valid
         found = False
         for state in storage.all("State").values():

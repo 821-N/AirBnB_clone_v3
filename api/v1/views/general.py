@@ -9,8 +9,7 @@ from models import storage
 def get_obj(obj):
     """ get """
     if obj:
-        return (jsonify(obj.to_dict()), 200)
-        return {}
+        return jsonify(obj.to_dict()), 200
     return abort(404)
 
 
@@ -27,7 +26,7 @@ def put_obj(obj):
             if not(type(obj).__name__ == "User" and key in "email"):
                 setattr(obj, key, data[key])
     storage.save()
-    return (jsonify(obj.to_dict()), 200)
+    return jsonify(obj.to_dict()), 200
 
 
 def delete_obj(obj):
@@ -36,7 +35,7 @@ def delete_obj(obj):
         abort(404)
     storage.delete(obj)
     storage.save()
-    return (jsonify(dict()), 200)
+    return jsonify(dict()), 200
 
 
 methods = {
