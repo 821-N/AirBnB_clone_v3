@@ -26,7 +26,7 @@ def cities_id_places(id):
         try:
             data = request.get_json()
         except:
-            return {"error": "Not found"}, 404
+            return "Not a JSON", 400
         # make sure city id is valid
         found = False
         for city in storage.all("City").values():
@@ -48,7 +48,7 @@ def cities_id_places(id):
             return {"error": "Not found"}, 404
 
         if "name" not in data:
-            return {"error": "Not found"}, 404
+            return "Missing name", 400
         new = Place()
         for key in data:
             setattr(new, key, data[key])
